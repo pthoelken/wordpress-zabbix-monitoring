@@ -1,0 +1,106 @@
+zabbix_export:
+  version: '7.4'
+  template_groups:
+    - uuid: 7b0d7c2e9c3b4e9db4a9c3c7b4a9e001
+      name: Templates/Web
+  templates:
+    - uuid: a1c3e7b29f4d4b9a8c2f1e3a9b7d0001
+      template: 'Template WordPress Update Monitoring'
+      name: 'Template WordPress Update Monitoring'
+      groups:
+        - name: Templates/Web
+      items:
+        - uuid: b1a1d0019c9a4f3e9d8c7a2f00000002
+          name: 'WordPress Core Updates'
+          type: DEPENDENT
+          key: wp.updates.core
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.core_updates
+          master_item:
+            key: wp.updates.raw
+          triggers:
+            - uuid: e5902eb573c24d8abdc4c3dff9405bf4
+              expression: 'last(/Template WordPress Update Monitoring/wp.updates.core)>0'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Template WordPress Update Monitoring/wp.updates.core)=0'
+              name: 'WordPress: {ITEM.LASTVALUE} Core update available'
+              priority: HIGH
+        - uuid: b1a1d0019c9a4f3e9d8c7a2f00000005
+          name: 'WordPress DB Update Required'
+          type: DEPENDENT
+          key: wp.updates.db
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.db_update_required
+          master_item:
+            key: wp.updates.raw
+          triggers:
+            - uuid: 20179819026344d7b8b28eb28eff6e3e
+              expression: 'last(/Template WordPress Update Monitoring/wp.updates.db)>0'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Template WordPress Update Monitoring/wp.updates.db)=0'
+              name: 'WordPress: {ITEM.LASTVALUE} Database update required'
+              priority: HIGH
+        - uuid: b1a1d0019c9a4f3e9d8c7a2f00000003
+          name: 'WordPress Plugin Updates'
+          type: DEPENDENT
+          key: wp.updates.plugins
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.plugin_updates
+          master_item:
+            key: wp.updates.raw
+          triggers:
+            - uuid: 242e9f26f21546af8eb8e76f8db44f0a
+              expression: 'last(/Template WordPress Update Monitoring/wp.updates.plugins)>0'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Template WordPress Update Monitoring/wp.updates.plugins)=0'
+              name: 'WordPress: {ITEM.LASTVALUE} Plugin update available'
+              priority: WARNING
+        - uuid: b1a1d0019c9a4f3e9d8c7a2f00000001
+          name: 'WordPress Update Status (RAW)'
+          type: HTTP_AGENT
+          key: wp.updates.raw
+          delay: 15m
+          value_type: TEXT
+          url: '{$WP_AUTH_URI}/wp-json/zabbix/v1/updates'
+        - uuid: b1a1d0019c9a4f3e9d8c7a2f00000004
+          name: 'WordPress Theme Updates'
+          type: DEPENDENT
+          key: wp.updates.themes
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.theme_updates
+          master_item:
+            key: wp.updates.raw
+          triggers:
+            - uuid: c4600ea01f3f4550aa566de84637bf3c
+              expression: 'last(/Template WordPress Update Monitoring/wp.updates.themes)>0'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Template WordPress Update Monitoring/wp.updates.themes)=0'
+              name: 'WordPress: {ITEM.LASTVALUE} Theme update available'
+              priority: WARNING
+        - uuid: b1a1d0019c9a4f3e9d8c7a2f00000006
+          name: 'WordPress Translation Updates'
+          type: DEPENDENT
+          key: wp.updates.translations
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.translation_updates
+          master_item:
+            key: wp.updates.raw
+          triggers:
+            - uuid: e5616890cc104912a98ab3c038fcfa2f
+              expression: 'last(/Template WordPress Update Monitoring/wp.updates.translations)>0'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'last(/Template WordPress Update Monitoring/wp.updates.translations)=0'
+              name: 'WordPress: {ITEM.LASTVALUE} Translation update available'
+              priority: INFO
+      macros:
+        - macro: '{$WP_AUTH_URI}'
