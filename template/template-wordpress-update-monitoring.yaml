@@ -80,6 +80,13 @@ zabbix_export:
           tags:
             - tag: Application
               value: WORDPRESS
+          triggers:
+            - uuid: 8b54caa8ae83478eb83d7522afe8606a
+              expression: 'nodata(/Template WordPress Update Monitoring/wp.updates.raw,20m)=1'
+              recovery_mode: RECOVERY_EXPRESSION
+              recovery_expression: 'nodata(/Template WordPress Update Monitoring/wp.updates.raw,20m)=0'
+              name: 'WordPress: Update API not reachable'
+              priority: HIGH
         - uuid: b1a1d0019c9a4f3e9d8c7a2f00000004
           name: 'WordPress Theme Updates'
           type: DEPENDENT
