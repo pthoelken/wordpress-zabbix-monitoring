@@ -20,6 +20,9 @@ zabbix_export:
                 - $.core_updates
           master_item:
             key: wp.updates.raw
+          tags:
+            - tag: Application
+              value: WORDPRESS
           triggers:
             - uuid: e5902eb573c24d8abdc4c3dff9405bf4
               expression: 'last(/Template WordPress Update Monitoring/wp.updates.core)>0'
@@ -37,6 +40,9 @@ zabbix_export:
                 - $.db_update_required
           master_item:
             key: wp.updates.raw
+          tags:
+            - tag: Application
+              value: WORDPRESS
           triggers:
             - uuid: 20179819026344d7b8b28eb28eff6e3e
               expression: 'last(/Template WordPress Update Monitoring/wp.updates.db)>0'
@@ -54,6 +60,9 @@ zabbix_export:
                 - $.plugin_updates
           master_item:
             key: wp.updates.raw
+          tags:
+            - tag: Application
+              value: WORDPRESS
           triggers:
             - uuid: 242e9f26f21546af8eb8e76f8db44f0a
               expression: 'last(/Template WordPress Update Monitoring/wp.updates.plugins)>0'
@@ -68,6 +77,9 @@ zabbix_export:
           delay: 15m
           value_type: TEXT
           url: '{$WP_AUTH_URI}/wp-json/zabbix/v1/updates'
+          tags:
+            - tag: Application
+              value: WORDPRESS
         - uuid: b1a1d0019c9a4f3e9d8c7a2f00000004
           name: 'WordPress Theme Updates'
           type: DEPENDENT
@@ -78,6 +90,9 @@ zabbix_export:
                 - $.theme_updates
           master_item:
             key: wp.updates.raw
+          tags:
+            - tag: Application
+              value: WORDPRESS
           triggers:
             - uuid: c4600ea01f3f4550aa566de84637bf3c
               expression: 'last(/Template WordPress Update Monitoring/wp.updates.themes)>0'
@@ -95,6 +110,9 @@ zabbix_export:
                 - $.translation_updates
           master_item:
             key: wp.updates.raw
+          tags:
+            - tag: Application
+              value: WORDPRESS
           triggers:
             - uuid: e5616890cc104912a98ab3c038fcfa2f
               expression: 'last(/Template WordPress Update Monitoring/wp.updates.translations)>0'
